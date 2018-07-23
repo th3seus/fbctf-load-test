@@ -36,9 +36,10 @@ def view_tutorial(driver):
     time.sleep(2)
     actions.click(tutorial)
     actions.perform()
+
     while tutPages != 0:
         time.sleep(2)
-        nextBtn = driver.find_element_by_css_selector(".cta--yellow")
+        nextBtn = driver.find_element_by_css_selector(".cta--yellow") #gets stale after iteration
         actions.move_to_element(nextBtn)
         time.sleep(2)
         actions.click(nextBtn)
