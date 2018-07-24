@@ -31,27 +31,48 @@ def view_tutorial(driver):
     tutorial = driver.find_element_by_css_selector(".fb-init-tutorial")
     tutPages = 8
 
+    # find nav bar, then click the link to open tutorial
     actions = ActionChains(driver)
     actions.move_to_element(nav)
     time.sleep(2)
     actions.click(tutorial)
     actions.perform()
 
-    while tutPages != 0:
+    # step through tutorial pages
+    for x in range(0,9):
+        print "at window %d" % x
         time.sleep(2)
-        nextBtn = driver.find_element_by_css_selector(".cta--yellow") #gets stale after iteration
-        actions.move_to_element(nextBtn)
-        time.sleep(2)
-        actions.click(nextBtn)
-        actions.perform()
-        tutPages -= 1
+        nextBtn = False
+        while nextBtn == False:
+            nextBtn = False
+            nextBtn = WebDriverWait(driver, 3).until(find_tutorial_next_button)
+            print nextBtn
+            if EC.staleness_of(nextBtn) == False:
+                actions.move_to_element(nextBtn)
+                time.sleep(2)
+                actions.click(nextBtn)
+                time.sleep(2)
+                actions.perform()
+                # tutPages -= 1
+            else:
+                nextBtn = False
+
+def find_tutorial_next_button(driver):
+    print 'looking for button'
+    btn = driver.find_element_by_css_selector(".cta--yellow")
+    if btn:
+        print "found button"
+        return btn
+    else:
+        print 'did not find button'
+        return False
 
 driver = webdriver.Firefox()
 user = "team1"
 password = "password3"
 
 # go to homepage 
-driver.get("https://54.193.2.111/index.php")
+driver.get("https://52.53.207.37/index.php")
 assert "Facebook CTF" in driver.title
 
 # login
@@ -70,4 +91,3 @@ finally:
     print "finally"
     time.sleep(15)
     driver.close() """
-
